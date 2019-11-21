@@ -5,6 +5,10 @@ module.exports = {
     "postcss-aspect-ratio-mini": {},   //用来处理元素容器宽高比
     "postcss-write-svg": { utf8: false },    //用来处理移动端1px的解决方案。该插件主要使用的是border-image和background来做1px的相关处理。
     "postcss-cssnext": {},    //该插件可以让我们使用CSS未来的特性，其会对这些特性做相关的兼容性处理。
+    "postcss-pxtorem": {
+      "rootValue": 32,
+      "propList": ["*"]
+    },
     "postcss-px-to-viewport": {    //把px单位转换为vw、vh、vmin或者vmax这样的视窗单位，也是vw适配方案的核心插件之一。
       viewportWidth: 750,    //视窗的宽度
       viewportHeight: 1334,   //视窗的高度
@@ -20,9 +24,6 @@ module.exports = {
       autoprefixer: false,    //cssnext和cssnano都具有autoprefixer,事实上只需要一个，所以把默认的autoprefixer删除掉，然后把cssnano中的autoprefixer设置为false。
       "postcss-zindex": false   //只要启用了这个插件，z-index的值就会重置为1
     },
-    "postcss-pxtorem": {
-      "rootValue": 32,
-      "propList": ["*"]
-    }
+    
   }
 }
