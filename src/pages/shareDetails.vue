@@ -4,12 +4,12 @@
     <div class="goodsIntroduction">
       <div class="title">
         <span class="line"></span>
-        <span>{{goodsIntroduction.title}}</span>
+        <span>{{infoData.activityBrandName}}</span>
         <span class="line"></span>
-        <p class="txt">{{goodsIntroduction.content}}</p>
+        <p class="txt">{{infoData.activityRemark}}</p>
       </div>
       <div class="content">
-          <img v-for="item in goodsInfoImg" :key="item.id" :src="item.src" alt="">
+          <img v-for="item in infoData.activityPictureList" :key="item.id" :src="item" alt="">
       </div>
     </div>
 
@@ -30,7 +30,7 @@
           </div>
 
           <div class="imgList">
-              <img v-for="item in goodsInfoImg" :key="item.id" :src="item.src" alt="">
+              <!-- <img v-for="item in goodsInfoImg" :key="item.id" :src="item.src" alt=""> -->
           </div>
 
           <p class="choiceTxt">选择尺码，下单购买</p>
@@ -50,40 +50,33 @@
 export default {
   data: function() {
     return {
-      goodsIntroduction: {
-        title: "商品及尺码预览",
-        content:
-          "【消息】中新网11月21日电 综合报道,斯里兰卡新总统拉贾帕克萨20日宣布,将任命其亲哥哥马欣达拉贾帕克萨为新总理。同一天,现任总理维克勒马辛哈办公室发表"
-      },
-      goodsInfoImg: [
-        { src: require("@/assets/1.jpg") },
-        { src: require("@/assets/2.jpg") },
-        { src: require("@/assets/1.jpg") },
-        { src: require("@/assets/2.jpg") },
-        { src: require("@/assets/1.jpg") },
-        { src: require("@/assets/2.jpg") },
-        { src: require("@/assets/1.jpg") },
-        { src: require("@/assets/2.jpg") },
-        { src: require("@/assets/1.jpg") }
-      ],
-      contentList: {}
+      infoData: {},
+      goodsIntroduction: {},
+      contentList: {},
+      id:this.$route.query.id?this.$route.query.id:2,
+      userId:this.$route.query.userId?this.$route.query.userId:6,
+      addPrice:this.$route.query.addPrice ? Number(this.$route.query.addPrice):0,
+      isShowSellOut:this.$route.query.isShowSellOut == 'true'? true : false,
+      isAddAddress:this.$route.query.isAddAddress == 'true'? true : false,
+      kpageSize:5,
+      page:1,
+	    total:0,
     };
   },
   methods: {
-    getlist: function() {
-      let url = "http://120.79.5.83:10008/activity/goods/listActivityGoods";
+    getInfo: function() {
+      let url = "https://www.yidegz.cn/activity/goods/listActivityById";
       this.axios
         .post(url, {
-          id: 1
+          id: this.id
         })
         .then(res => {
-          this.contentList = res.data.data.activity;
-          console.log(this.contentList);
+          this.infoData = res.data.data         
         });
-    }
+    },
   },
   created() {
-    this.getlist();
+    this.getInfo();
   }
 };
 </script>
@@ -95,12 +88,13 @@ export default {
 }
 .goodsIntroduction {
   width: 646px;
-  height: 820px;
+  /* height: 820px; */
   margin: 0 auto;
   padding-top: 31px;
   background-color: #f0f0f0;
   border-top-left-radius: 50px;
   border-bottom-right-radius: 50px;
+  padding-bottom:50px;
 }
 .goodsIntroduction>.title {
   margin: 0 auto;
@@ -154,8 +148,10 @@ export default {
   height: auto;
   margin: 67px auto 0;
 }
-.contentList .item {
+.contentList .item{
   display: flex;
+  border-bottom:1px solid rgba(0,0,0,0.2);
+  padding-bottom:60px;
 }
 .contentList .item .storeHeaderPic {
   width: 78px;
@@ -254,7 +250,7 @@ export default {
   color: #ffffff;
   padding: 12px;
   margin-top: 20px;
-  font-weight: 400;
+  font-weight: bold;
   border-radius: 5px;
   
 }
