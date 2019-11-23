@@ -88,13 +88,11 @@ export default {
 }
 .goodsIntroduction {
   width: 646px;
-  /* height: 820px; */
   margin: 0 auto;
   padding-top: 31px;
   background-color: #f0f0f0;
   border-top-left-radius: 50px;
   border-bottom-right-radius: 50px;
-  padding-bottom:50px;
 }
 .goodsIntroduction>.title {
   margin: 0 auto;
@@ -123,14 +121,14 @@ export default {
   color: #888;
 }
 .goodsIntroduction>.content {
-  width: 602px;
-  height: 602px;
+  /* width: 602px;
+  height: 602px; */
   margin: 0 auto;
-  margin-top:28px;
   display:flex;
   flex-direction:row;
   flex-wrap:wrap;
   justify-content:flex-start;
+  padding:30px;
 }
 
 .goodsIntroduction .content img{
