@@ -43,7 +43,15 @@
         </div>
       </div>
     </div>
+
+
+    <!-- loading -->
+    <div class="c_loading">
+		  <img src="../assets/loading.gif">
+	  </div>
+
   </div>
+  
 </template>
 
 <script>
@@ -71,7 +79,7 @@ export default {
           id: this.id
         })
         .then(res => {
-          this.infoData = res.data.data         
+          this.infoData = res.data.data
         });
     },
   },
@@ -106,8 +114,9 @@ export default {
 }
 .goodsIntroduction .title span:nth-child(2) {
   font-size: 36px;
-  color: #888;
+  color: #333;
   padding: 0 5px;
+  font-weight: 540;
 }
 .title .txt {
   margin-top: 22px;
@@ -250,6 +259,28 @@ export default {
   margin-top: 20px;
   font-weight: bold;
   border-radius: 5px;
-  
 }
+
+.c_loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1);
+    display: none;
+    z-index: 9999
+  }
+
+  .c_loading img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 130px;
+    height: 120px;
+    background: pink
+  }
 </style>

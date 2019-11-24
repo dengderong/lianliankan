@@ -11,10 +11,5 @@ export default new Router({
       name: 'shareDetails',
       component: shareDetails,
     },
-    {
-      path: '/shareDetails',
-      name: 'shareDetails',
-      component: shareDetails,
-    },
   ]
 })
