@@ -15,29 +15,24 @@
 
     <!-- 图片列表 -->
     <div class="contentList">
-      <div class="item">
+      <div class="item" v-for="item in allData.dataList" :key="item.id">
         <div class="storeHeaderPic">
-            <img :src="contentList.activityBrandPicture" alt="">
+            <img :src="item.brandPicture" alt="">
         </div>
         <div class="content">
           <div class="title">
-               <p class="businessName">{{contentList.activityBrandName}}</p>
-               <p class="businessTxt">Y103 itrees伊树：长袖T恤 米白</p>
-               <p class="businessTxt">码数:L</p>
-               <p class="businessTxt">吊牌价:599元</p>
-               <p class="businessTxt">款号:I18CT219</p>
-               <p class="businessPrice"><span class="price">售价：￥79</span> <del class="beforPrice">￥559</del></p>
+               <p class="businessName">{{item.brandName}}</p>
+               <p class="businessTxt" v-html="item.goodsRemark"></p>
+               <p class="businessPrice"><span class="price">售价：￥{{item.goodSkuList[0].suggestPrice+addPrice}}</span> <del class="beforPrice">￥{{item.goodSkuList[0].marketPrice}}</del></p>
           </div>
 
           <div class="imgList">
-              <!-- <img v-for="item in goodsInfoImg" :key="item.id" :src="item.src" alt=""> -->
+              <img v-for="picItem in item.goodPictureList" :key="picItem.id" :src="picItem" alt="">
           </div>
 
           <p class="choiceTxt">选择尺码，下单购买</p>
           <div class="sizeList">
-              <span>S</span>
-              <span>L</span>
-              <span>M</span>
+              <span  @click="selectSize(itemSku,index)" :class="{'disabled':itemSku.activitySkuNum == 0,'active':btnActive}"  v-for="(itemSku,index) in item.goodSkuList" :key="index">{{itemSku.skuName}}</span>
           </div>
           <button class="buyBtn">立即购买</button>
         </div>
@@ -47,7 +42,7 @@
 
     <!-- loading -->
     <div class="c_loading">
-		  <img src="../assets/loading.gif">
+		  <img src="@/assets/loading.gif">
 	  </div>
 
   </div>
@@ -61,14 +56,17 @@ export default {
       infoData: {},
       goodsIntroduction: {},
       contentList: {},
-      id:this.$route.query.id?this.$route.query.id:2,
+      id:this.$route.query.id?this.$route.query.id:133,
       userId:this.$route.query.userId?this.$route.query.userId:6,
       addPrice:this.$route.query.addPrice ? Number(this.$route.query.addPrice):0,
       isShowSellOut:this.$route.query.isShowSellOut == 'true'? true : false,
       isAddAddress:this.$route.query.isAddAddress == 'true'? true : false,
       kpageSize:5,
       page:1,
-	    total:0,
+      total:0,
+      dataMessage:{},
+      allData:{},
+      btnActive:false,
     };
   },
   methods: {
@@ -80,11 +78,30 @@ export default {
         })
         .then(res => {
           this.infoData = res.data.data
+          // console.log(111,res)
         });
     },
+    getList(){
+      let url = 'https://www.yidegz.cn/activity/goods/listActivityGoodsByPage';
+      this.axios.
+        post(url,{
+          id: this.id,
+          pageSize: this.kpageSize,
+          pageNum: this.page
+      }).then(res=>{
+          
+          this.dataMessage = res.data
+          this.allData = res.data.data
+      })
+    },
+    selectSize(item,index){
+          console.log(item)
+          console.log(index)
+    }
   },
   created() {
     this.getInfo();
+    this.getList();
   }
 };
 </script>
@@ -159,6 +176,8 @@ export default {
   display: flex;
   border-bottom:1px solid rgba(0,0,0,0.2);
   padding-bottom:60px;
+  margin-top: 30px;
+
 }
 .contentList .item .storeHeaderPic {
   width: 78px;
@@ -176,24 +195,23 @@ export default {
 
 }
 .contentList .item .content>.title{
-  margin-right:80px;
+  margin-right:40px;
   margin-left:0px;
   text-align: left;
 }
 .businessTxt{
   text-align: left;
+  white-space: pre-wrap;
+  font-size:28px;
+  line-height: 40px;
 }
 .businessName{
   margin: 0;
   color: #2d8cf0;
   font-weight: 600;
-  font-size: 32px;
+  font-size: 26px;
   height: 50px;
   padding-bottom: 10px;
-}
-.businessTxt{
-  font-size:28px;
-  line-height: 46px;
 }
 .price{
   font-size: 30px;
@@ -246,17 +264,28 @@ export default {
   font-size:30px;
   background-color:#d9d9d9;
   color: #444243;
-  padding: 10px 10px;
+  padding: 6px;
   margin:0 10px;
   border-radius:5px;
 }
+
+.sizeList span.disabled {
+  background: #cccccc;
+  color: #dddddd;
+}
+
+.sizeList span.active {
+  background: #EF3830;
+  color: #ffffff;
+}
+
 .buyBtn{
   float: right;
   border:0;
   background-color: #EF3830;
   color: #ffffff;
   padding: 12px;
-  margin-top: 20px;
+  margin-top: 35px;
   font-weight: bold;
   border-radius: 5px;
 }
