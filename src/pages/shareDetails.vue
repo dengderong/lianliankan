@@ -15,7 +15,7 @@
 
     <!-- 图片列表 -->
     <div class="contentList">
-      <div class="item" v-for="item in allData.dataList" :key="item.id">
+      <div class="item" v-for="(item,index) in allData.dataList" :key="index">
         <div class="storeHeaderPic">
             <img :src="item.brandPicture" alt="">
         </div>
@@ -32,7 +32,7 @@
 
           <p class="choiceTxt">选择尺码，下单购买</p>
           <div class="sizeList">
-              <span  @click="selectSize(itemSku,index)" :class="{'disabled':itemSku.activitySkuNum == 0,'active':btnActive}"  v-for="(itemSku,index) in item.goodSkuList" :key="index">{{itemSku.skuName}}</span>
+              <span  @click="selectSize(itemSku,indexSku,item,index)" :class="{'disabled':itemSku.activitySkuNum == 0,'active':itemSku.isShow}"  v-for="(itemSku,indexSku) in item.goodSkuList" :key="indexSku" :ref="`sizeDom${index}`">{{itemSku.skuName}}</span>
           </div>
           <button class="buyBtn">立即购买</button>
         </div>
@@ -89,14 +89,31 @@ export default {
           pageSize: this.kpageSize,
           pageNum: this.page
       }).then(res=>{
-          
+        console.log(res)
           this.dataMessage = res.data
           this.allData = res.data.data
+          this.allData.dataList.forEach(item => {
+              item.goodSkuList.forEach(itemSku => {
+                  item.isShow = false
+              })
+          });
       })
     },
-    selectSize(item,index){
-          console.log(item)
-          console.log(index)
+    selectSize(itemSku,indexSku,item,index){
+          //当库存为0是不让显示状态
+          item.goodSkuList.forEach(item =>{
+              if(item.activitySkuNum == 0 || this.$refs[`sizeDom${index}`][indexSku].className == 'disabled'){
+                 itemSku.isShow = false;
+              }else{
+                 itemSku.isShow = !itemSku.isShow
+              }
+          })
+         
+          item.goodSkuList.sort()
+          
+          
+
+          
     }
   },
   created() {
@@ -261,7 +278,7 @@ export default {
 }
 
 .sizeList span{
-  font-size:30px;
+  font-size:24px;
   background-color:#d9d9d9;
   color: #444243;
   padding: 6px;
@@ -284,7 +301,7 @@ export default {
   border:0;
   background-color: #EF3830;
   color: #ffffff;
-  padding: 12px;
+  padding: 12px 18px;
   margin-top: 35px;
   font-weight: bold;
   border-radius: 5px;
