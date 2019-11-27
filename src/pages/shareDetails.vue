@@ -67,6 +67,7 @@ export default {
       dataMessage:{},
       allData:{},
       btnActive:false,
+      
     };
   },
   methods: {
@@ -94,31 +95,34 @@ export default {
           this.allData = res.data.data
           this.allData.dataList.forEach(item => {
               item.goodSkuList.forEach(itemSku => {
-                  item.isShow = false
+                  itemSku.isShow = false
               })
           });
       })
     },
     selectSize(itemSku,indexSku,item,index){
-          //当库存为0是不让显示状态
-          item.goodSkuList.forEach(item =>{
-              if(item.activitySkuNum == 0 || this.$refs[`sizeDom${index}`][indexSku].className == 'disabled'){
-                 itemSku.isShow = false;
-              }else{
-                 itemSku.isShow = !itemSku.isShow
-              }
-          })
-         
-          item.goodSkuList.sort()
-          
-          
-
-          
+      //当库存为0是不让显示状态
+      item.goodSkuList.forEach(val =>{
+          if(val.activitySkuNum == 0 || this.$refs[`sizeDom${index}`][indexSku].className == 'disabled'){
+              itemSku.isShow = false;
+          }else{
+              val.isShow = false
+          }
+        })
+      if(this.$refs[`sizeDom${index}`][indexSku].className != 'disabled'){
+          itemSku.isShow = true
+      }  
+      item.goodSkuList.sort()
     }
   },
   created() {
     this.getInfo();
     this.getList();
+  },
+  mounted(){
+     window.scroll(function(){
+            
+     })
   }
 };
 </script>
