@@ -68,12 +68,15 @@ export default {
       addPrice:this.$route.query.addPrice ? Number(this.$route.query.addPrice):0,
       isShowSellOut:this.$route.query.isShowSellOut == 'true'? true : false,
       isAddAddress:this.$route.query.isAddAddress == 'true'? true : false,
-      kpageSize:5,
-      page:1,
-      total:0,
-      dataMessage:{},
+      data:{},
       allData:{},
       btnActive:false,
+      scroll:0,
+      clienHeight:0,
+      documentHeight:0,
+      pageSize:5,
+      pageNum:0,
+      total:0,
       
     };
   },
@@ -86,7 +89,6 @@ export default {
         })
         .then(res => {
           this.infoData = res.data.data
-          // console.log(111,res)
         });
     },
     getList(){
@@ -94,12 +96,17 @@ export default {
       this.axios.
         post(url,{
           id: this.id,
-          pageSize: this.kpageSize,
-          pageNum: this.page
+          pageSize: this.pageSize,
+          pageNum: this.pageNum
       }).then(res=>{
         console.log(res)
-          this.dataMessage = res.data
+          this.data = res.data
           this.allData = res.data.data
+          this.data.addPrice = this.addPrice
+          this.data.isShowSellOut = this.isShowSellOut
+          this.pageSize = this.data.pageSize
+          this.pageNum = this.data.pageNum
+          this.total = this.data.totalPage
           this.allData.dataList.forEach(item => {
               item.goodSkuList.forEach(itemSku => {
                   itemSku.isShow = false
@@ -120,6 +127,13 @@ export default {
           itemSku.isShow = true
       }  
       item.goodSkuList.sort()
+    },
+    scrollFun(){
+       this.scroll = document.documentElement.scrollTop || document.body.scrollTop;  //滚动条距离顶部的距离
+       this.clienHeight =  document.documentElement.clientHeight;   //页面可见高度
+       this.documentHeight = document.documentElement.offsetHeight;  //页面总高度
+       
+        console.log(this.documentHeight)
     }
   },
   created() {
@@ -127,12 +141,8 @@ export default {
     this.getList();
   },
   mounted(){
-     window.scroll(function(){
-            
-     })
-
-      console.log(this.$store.state.count)
-
+      window.addEventListener('scroll', this.scrollFun)
+      
   }
 };
 </script>
