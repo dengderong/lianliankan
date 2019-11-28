@@ -34,7 +34,7 @@
           <div class="sizeList">
               <span  @click="selectSize(itemSku,indexSku,item,index)" :class="{'disabled':itemSku.activitySkuNum == 0,'active':itemSku.isShow}"  v-for="(itemSku,indexSku) in item.goodSkuList" :key="indexSku" :ref="`sizeDom${index}`">{{itemSku.skuName}}</span>
           </div>
-          <button class="buyBtn">立即购买</button>
+          <button class="buyBtn">加入购物车</button>
         </div>
       </div>
     </div>
@@ -44,6 +44,13 @@
     <div class="c_loading">
 		  <img src="@/assets/loading.gif">
 	  </div>
+    
+
+    <!-- shoppingcar -->
+    <div class="shoppingcar">
+      <img src="@/assets/car.png" alt="">
+      <p class="count">22</p>
+    </div>
 
   </div>
   
@@ -123,6 +130,9 @@ export default {
      window.scroll(function(){
             
      })
+
+      console.log(this.$store.state.count)
+
   }
 };
 </script>
@@ -332,5 +342,46 @@ export default {
     width: 130px;
     height: 120px;
     background: pink
+  }
+  .goodsTxt{
+    display: inherit;
+    text-align:right;
+    font-size:18px;
+    color:#cccccc;
+    line-height:60px;
+  }
+
+  .shoppingcar{
+    position:fixed;
+    bottom:15px;
+    right:20px;
+    z-index:100;
+    background-color:#ef3830;
+    border-radius:50%;
+    height:90px;
+    width:90px;
+  }
+  .shoppingcar img{
+    width:50px;
+    height:50px;
+    position:absolute;
+    top:50%;
+    left: 50%;
+    margin-top:-20px;
+    margin-left:-25px;
+  }
+  .shoppingcar p{
+    position:absolute;
+    right: 10px;
+    top:8px;
+    color:red;
+    font-weight: bold;
+    background-color:#fff;
+    border-radius:50%;
+    min-height:30px;
+    min-width:30px;
+    font-size:16px;
+    line-height: 30px;
+
   }
 </style>

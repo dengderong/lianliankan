@@ -10,6 +10,9 @@ export default new Router({
       path: '/',
       name: 'shareDetails',
       component: shareDetails,
+      meta:{
+        title: '商品详情',
+      }
     },
   ]
 })

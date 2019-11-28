@@ -7,20 +7,43 @@ import rem from '../rem'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
+import store from './store'
+import VueWechatTitle from 'vue-wechat-title'; // 加设置title插件
 
 
+
+//css...
 import 'swiper/dist/css/swiper.css'
 
 
-Vue.use(VueAxios,axios)
-Vue.use(VueAwesomeSwiper, /* { default global options } */)
+Vue.use(VueAxios, axios)
+Vue.use(VueWechatTitle)
+Vue.use(VueAwesomeSwiper)
+
 
 Vue.config.productionTip = false
+
+router.beforeEach((to, from, next) => {
+  /* 路由发生变化修改页面meta */
+  if (to.meta.content) {
+    let head = document.getElementsByTagName('head');
+    let meta = document.createElement('meta');
+    meta.content = to.meta.content;
+    head[0].appendChild(meta)
+  }
+  /* 路由发生变化修改页面title */
+  if (to.meta.title) {
+    document.title = to.meta.title;
+  }
+  next()
+})
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })
+
