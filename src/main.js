@@ -8,7 +8,6 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import store from './store'
-import VueWechatTitle from 'vue-wechat-title'; // 加设置title插件
 
 
 
@@ -17,7 +16,6 @@ import 'swiper/dist/css/swiper.css'
 
 
 Vue.use(VueAxios, axios)
-Vue.use(VueWechatTitle)
 Vue.use(VueAwesomeSwiper)
 
 

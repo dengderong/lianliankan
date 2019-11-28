@@ -133,7 +133,7 @@ export default {
        this.clienHeight =  document.documentElement.clientHeight;   //页面可见高度
        this.documentHeight = document.documentElement.offsetHeight;  //页面总高度
        
-        console.log(this.documentHeight)
+      console.log(this.documentHeight)
     }
   },
   created() {
@@ -363,8 +363,8 @@ export default {
 
   .shoppingcar{
     position:fixed;
-    bottom:15px;
-    right:20px;
+    bottom:60px;
+    right:40px;
     z-index:100;
     background-color:#ef3830;
     border-radius:50%;
