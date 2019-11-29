@@ -17,7 +17,7 @@
     <div class="contentList">
       <div class="item" v-for="(item,index) in data.dataList" :key="index">
         <div class="storeHeaderPic">
-          <img :src="item.brandPicture" alt />
+            <img :src="item.brandPicture" alt />
         </div>
         <div class="content">
           <div class="title">
@@ -28,6 +28,17 @@
               <del class="beforPrice">￥{{item.goodSkuList[0].marketPrice}}</del>
             </p>
           </div>
+
+
+          <div class="cover" id="cover">
+              <div class="swiper-container"  v-swiper:mySwiper="swiperOption"  ref="mySwiper">
+                <div class="swiper-wrapper" >
+                      <div class="swiper-slide" v-for="(picItem,index) in item.goodPictureList" :key="index" >
+                         <img :src="picItem"  />
+                       </div>
+                </div>
+              </div>
+	        </div>
 
           <div class="imgList">
             <img v-for="picItem in item.goodPictureList" :key="picItem.id" :src="picItem" alt />
@@ -68,6 +79,8 @@
 </template>
 
 <script>
+
+
 export default {
   data: function() {
     return {
@@ -89,6 +102,12 @@ export default {
       totalPage: 0,
       dataloading:{},
       intheEnd:0,
+      swiperOption:{
+          pagination: {
+            direction: 'horizontal',
+		        loop: true
+          },
+      }
     };
   },
   methods: {
@@ -189,9 +208,15 @@ export default {
     this.getInfo();
     this.getList();
   },
+  computed: {
+      swiper() {
+        return this.$refs.mySwiper.swiper
+      }
+  },
+
   mounted() {
-    window.addEventListener("scroll", this.scrollFun);
-  }
+      window.addEventListener("scroll", this.scrollFun);
+  },
 };
 </script>
 
@@ -441,6 +466,29 @@ export default {
   line-height: 90px;
   font-size:24px;
   text-align: center;
-  
 }
+	.cover {
+			position: fixed;
+			left: 0;
+			top: 0;
+			z-index: 999;
+			width: 100%;
+			height: 100%;
+			background: rgba(0, 0, 0, 1);
+		}
+
+		.swiper-container {
+			width: 100%;
+			height: 100%;
+		}
+
+		.swiper-wrapper .swiper-slide {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+		}
+
+		.swiper-wrapper .swiper-slide img {
+			width: 100%;
+		}
 </style>
