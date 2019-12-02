@@ -28,19 +28,11 @@
               <del class="beforPrice">￥{{item.goodSkuList[0].marketPrice}}</del>
             </p>
           </div>
-
-           <swiper :options="swiperOption" ref="mySwiper">
-                <!-- slides -->
-                <swiper-slide>I'm Slide 1</swiper-slide>
-                <swiper-slide>I'm Slide 3</swiper-slide>
-                <swiper-slide>I'm Slide 4</swiper-slide>
-                <!-- Optional controls -->
-                <div class="swiper-pagination "  slot="pagination"></div>
-            </swiper> 
+          
           
 
           <div class="imgList">
-            <img  v-for="picItem in item.goodPictureList" :key="picItem.id" :src="picItem" alt />
+            <img @click="openImg(item)"  v-for="picItem in item.goodPictureList" :key="picItem.id" :src="picItem" alt />
           </div>
 
           <p class="choiceTxt">选择尺码，下单购买</p>
@@ -57,6 +49,12 @@
         </div>
       </div>
     </div>
+
+
+    <swiper :options="swiperOption" ref="mySwiper" v-show="swiperIsshow">
+          <swiper-slide v-for="(itemp,index) in swiperSlides" :key="index"> <img :src="itemp" alt=""> </swiper-slide>
+          <div class="swiper-pagination "  slot="pagination"></div>
+    </swiper> 
 
     <!-- loading -->
     <div class="c_loading" v-if="loadingShow">
@@ -119,7 +117,9 @@ export default {
           },
           on:{
             click:function(){
-               console.log('111')
+              //  console.log(document.getElementsByClassName('cover')[0].style.dispaly = 'none')
+              this.removeAllSlides()
+              // this.slideTo(3, 1000, false)
             }
           }
       },
@@ -221,11 +221,11 @@ export default {
     },
     openImg(item){
         this.swiperSlides = item.goodPictureList
+        console.log(this.swiperSlides )
+        debugger;
         this.swiperIsshow = 1
+        alert(1)
     },
-    closeImg(){
-        this.swiperIsshow = 0
-    }
   },
   created() {
     this.getInfo();
@@ -235,7 +235,11 @@ export default {
 
   mounted() {
     window.addEventListener("scroll", this.scrollFun);
-      
+    
+     
+    
+
+
   },
 };
 </script>
@@ -492,32 +496,26 @@ export default {
   font-size:24px;
   text-align: center;
 }
-	.cover {
-			position: fixed;
-			left: 0;
-			top: 0;
-			z-index: 999;
-			width: 100%;
-			height: 100%;
-			background: rgba(0, 0, 0, 1);
-		}
-
-		/* .swiper-container {
-			width: 100%;
-			height: 100%;
-		}
-
-		.swiper-wrapper .swiper-slide {
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-		}
-
-		.swiper-wrapper .swiper-slide img {
-			width: 100%;
-		} */
-
-    .swiper-slide{
-        height:200px;
+.swiper-container {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 999;
+  width: 100%;
+  height: 100%;
+  /* background: rgba(0, 0, 0, 1); */
 }
+
+.swiper-wrapper .swiper-slide {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.swiper-wrapper .swiper-slide img {
+  width: 100%;
+}
+
 </style>
