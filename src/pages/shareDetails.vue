@@ -29,19 +29,18 @@
             </p>
           </div>
 
-
-          <div class="cover" id="cover">
-              <div class="swiper-container"  v-swiper:mySwiper="swiperOption"  ref="mySwiper">
-                <div class="swiper-wrapper" >
-                      <div class="swiper-slide" v-for="(picItem,index) in item.goodPictureList" :key="index" >
-                         <img :src="picItem"  />
-                       </div>
-                </div>
-              </div>
-	        </div>
+           <swiper :options="swiperOption" ref="mySwiper">
+                <!-- slides -->
+                <swiper-slide>I'm Slide 1</swiper-slide>
+                <swiper-slide>I'm Slide 3</swiper-slide>
+                <swiper-slide>I'm Slide 4</swiper-slide>
+                <!-- Optional controls -->
+                <div class="swiper-pagination "  slot="pagination"></div>
+            </swiper> 
+          
 
           <div class="imgList">
-            <img v-for="picItem in item.goodPictureList" :key="picItem.id" :src="picItem" alt />
+            <img  v-for="picItem in item.goodPictureList" :key="picItem.id" :src="picItem" alt />
           </div>
 
           <p class="choiceTxt">选择尺码，下单购买</p>
@@ -79,9 +78,14 @@
 </template>
 
 <script>
-
+import 'swiper/dist/css/swiper.css'
+import { swiper, swiperSlide } from 'vue-awesome-swiper'
 
 export default {
+  components: {
+    swiper,
+    swiperSlide
+  },
   data: function() {
     return {
       infoData: {},
@@ -102,12 +106,24 @@ export default {
       totalPage: 0,
       dataloading:{},
       intheEnd:0,
-      swiperOption:{
-          pagination: {
-            direction: 'horizontal',
-		        loop: true
+      swiperSlides:[],
+      swiperIsshow:0,
+      swiperOption: {  
+          notNextTick: true,
+          loop:false, //循环
+          initialSlide:0, //设定初始化时slide的索引
+          direction : 'horizontal', //滑动方向
+          pagination: { //分页器设置    
+              el: '.swiper-pagination',
+              clickable :true
           },
-      }
+          on:{
+            click:function(){
+               console.log('111')
+            }
+          }
+      },
+      
     };
   },
   methods: {
@@ -202,20 +218,24 @@ export default {
             this.intheEnd = 1
         }
       }
+    },
+    openImg(item){
+        this.swiperSlides = item.goodPictureList
+        this.swiperIsshow = 1
+    },
+    closeImg(){
+        this.swiperIsshow = 0
     }
   },
   created() {
     this.getInfo();
     this.getList();
   },
-  computed: {
-      swiper() {
-        return this.$refs.mySwiper.swiper
-      }
-  },
+ 
 
   mounted() {
-      window.addEventListener("scroll", this.scrollFun);
+    window.addEventListener("scroll", this.scrollFun);
+      
   },
 };
 </script>
@@ -363,19 +383,19 @@ export default {
 
 .sizeList {
   display: flex;
-  flex-flow: row nowrap;
+  flex-wrap:wrap;
   background: #f5f5f5;
-  padding: 15px 5px;
   text-align: left;
   border-radius: 5px;
+  padding:12px 12px 0 12px;
 }
 
 .sizeList span {
   font-size: 24px;
   background-color: #d9d9d9;
   color: #444243;
-  padding: 6px;
-  margin: 0 10px;
+  padding: 10px;
+  margin:0 12px 12px 0;
   border-radius: 5px;
 }
 
@@ -390,11 +410,16 @@ export default {
 }
 
 .buyBtn {
+  width:170px;
+  height:60px;
+  font-size:16px;
+  line-height:16px;
   float: right;
   border: 0;
   background-color: #ef3830;
   color: #ffffff;
-  padding: 12px 18px;
+  /* padding: 8px 12px; */
+  padding:0;
   margin-top: 35px;
   font-weight: bold;
   border-radius: 5px;
@@ -477,7 +502,7 @@ export default {
 			background: rgba(0, 0, 0, 1);
 		}
 
-		.swiper-container {
+		/* .swiper-container {
 			width: 100%;
 			height: 100%;
 		}
@@ -490,5 +515,9 @@ export default {
 
 		.swiper-wrapper .swiper-slide img {
 			width: 100%;
-		}
+		} */
+
+    .swiper-slide{
+        height:200px;
+}
 </style>
