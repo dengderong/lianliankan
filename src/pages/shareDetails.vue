@@ -32,7 +32,7 @@
           
 
           <div class="imgList">
-            <img @click="openImg(item)"  v-for="picItem in item.goodPictureList" :key="picItem.id" :src="picItem" alt />
+            <img @click="openImg(item,index)"  v-for="(picItem,index) in item.goodPictureList" :key="index" :src="picItem" alt />
           </div>
 
           <p class="choiceTxt">选择尺码，下单购买</p>
@@ -51,7 +51,7 @@
     </div>
 
 
-    <swiper :options="swiperOption" ref="mySwiper" v-show="swiperIsshow">
+    <swiper :options="swiperOption" ref="mySwiper" id="swiper">
           <swiper-slide v-for="(itemp,index) in swiperSlides" :key="index"> <img :src="itemp" alt=""> </swiper-slide>
           <div class="swiper-pagination "  slot="pagination"></div>
     </swiper> 
@@ -105,8 +105,9 @@ export default {
       dataloading:{},
       intheEnd:0,
       swiperSlides:[],
-      swiperIsshow:0,
+      swiperIsshow:false,
       swiperOption: {  
+          that:this,
           notNextTick: true,
           loop:false, //循环
           initialSlide:0, //设定初始化时slide的索引
@@ -116,10 +117,11 @@ export default {
               clickable :true
           },
           on:{
+            
             click:function(){
-              //  console.log(document.getElementsByClassName('cover')[0].style.dispaly = 'none')
-              this.removeAllSlides()
-              // this.slideTo(3, 1000, false)
+              this.el.style.display = 'none'
+              // console.log(this)
+              // debugger;
             }
           }
       },
@@ -219,12 +221,12 @@ export default {
         }
       }
     },
-    openImg(item){
+    openImg(item,index){
         this.swiperSlides = item.goodPictureList
-        console.log(this.swiperSlides )
-        debugger;
-        this.swiperIsshow = 1
-        alert(1)
+        this.swiperOption.initialSlide = index+1
+        document.getElementById('swiper').style.display = 'block'
+       
+        
     },
   },
   created() {
@@ -235,7 +237,8 @@ export default {
 
   mounted() {
     window.addEventListener("scroll", this.scrollFun);
-    
+    document.getElementById('swiper').style.display = 'none'
+    // console.log( document.getElementById('swiper'))
      
     
 
@@ -505,7 +508,7 @@ export default {
   z-index: 999;
   width: 100%;
   height: 100%;
-  /* background: rgba(0, 0, 0, 1); */
+  background: rgba(0, 0, 0, 1);
 }
 
 .swiper-wrapper .swiper-slide {
