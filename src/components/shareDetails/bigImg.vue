@@ -1,25 +1,29 @@
 <template>
-  <div>
-    <button @click="changeMessage" ref="aa">{{message}}</button>
-  </div>
+ <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">Slide 1</div>
+            <div class="swiper-slide">Slide 2</div>
+            <div class="swiper-slide">Slide 3</div>
+        </div>
+        <!-- 如果需要分页器 -->
+        <div class="swiper-pagination"></div>
+        <!-- 如果需要导航按钮 -->
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+        <!-- 如果需要滚动条 -->
+        <div class="swiper-scrollbar"></div>
+    </div>
 </template>
 
 <script>
-export default {
-   data(){
-     return{
-        message:'原始值'
-     }
-   },
-   methods:{
-     changeMessage(){
-        this.message = '修改后的值'
-        this.$nextTick(()=>{
-            console.log(this.$refs.aa.innerHTML)
-        })
-     },
+import Swiper from 'swiper';
+import 'swiper/dist/css/swiper.min.css';
 
-   }
+export default {
+    mounted(){
+      var mySwiper = new Swiper('.swiper-container', {})
+      console.log(mySwiper)
+    }
 }
 </script>
 

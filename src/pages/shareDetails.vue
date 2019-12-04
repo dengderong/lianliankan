@@ -85,6 +85,7 @@ export default {
     swiperSlide
   },
   data: function() {
+    var that = this
     return {
       infoData: {},
       goodsIntroduction: {},
@@ -105,23 +106,25 @@ export default {
       dataloading:{},
       intheEnd:0,
       swiperSlides:[],
+      swiperObj:{},
       swiperIsshow:false,
       swiperOption: {  
-          that:this,
+          this:this,
           notNextTick: true,
           loop:false, //循环
-          initialSlide:0, //设定初始化时slide的索引
+          // activeIndex:0,
+          // initialSlide:0, //设定初始化时slide的索引
           direction : 'horizontal', //滑动方向
           pagination: { //分页器设置    
               el: '.swiper-pagination',
               clickable :true
           },
           on:{
-            
+            init:function(){
+              that.swiperObj = this
+            },
             click:function(){
               this.el.style.display = 'none'
-              // console.log(this)
-              // debugger;
             }
           }
       },
@@ -223,7 +226,8 @@ export default {
     },
     openImg(item,index){
         this.swiperSlides = item.goodPictureList
-        this.swiperOption.initialSlide = index+1
+        console.log(this.swiperObj.activeIndex =index)
+        this.swiperObj.update()
         document.getElementById('swiper').style.display = 'block'
        
         
