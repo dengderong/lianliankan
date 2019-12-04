@@ -226,7 +226,7 @@ export default {
     },
     openImg(item,index){
         this.swiperSlides = item.goodPictureList
-        console.log(this.swiperObj.activeIndex =index)
+        this.swiperObj.activeIndex =index
         this.swiperObj.update()
         document.getElementById('swiper').style.display = 'block'
        
