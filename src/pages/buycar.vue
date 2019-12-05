@@ -23,29 +23,31 @@ export default {
 .wrapi{
     font-size:32px;
     background-color:#f5f5f5;
-    height:800px;
+    height:100vh;
 }
 .addressTxt{
     background-color:#fff;
-    padding: 20px 30px;
+    padding: 20px 40px;
     margin-bottom:20px;
     border-radius:10px;
+    box-shadow:5px 0px 5px #ccc
 }
 .addressTxt p:nth-child(1){
     display:flex;
     justify-content:space-between;
     align-items:center;
-    line-height:50px;
+    line-height:60px;
 }
 .addressTxt p:nth-child(2){
     text-align:left;
-    line-height:50px;
+    line-height:60px;
+    
 }
 .selectAddress{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    padding: 20px 30px;
+    padding: 20px 40px;
     background-color:#fff;
     border-radius:10px;
 }
