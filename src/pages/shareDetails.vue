@@ -45,7 +45,7 @@
               :ref="`sizeDom${index}`"
             >{{itemSku.skuName}}</span>
           </div>
-          <button class="buyBtn">加入购物车</button>
+          <button class="buyBtn" @click="addCar">加入购物车</button>
         </div>
       </div>
     </div>
@@ -53,7 +53,7 @@
 
     <swiper :options="swiperOption" ref="mySwiper" id="swiper">
           <swiper-slide v-for="(itemp,index) in swiperSlides" :key="index"> <img :src="itemp" alt=""> </swiper-slide>
-          <div class="swiper-pagination "  slot="pagination"></div>
+          <!-- <div class="swiper-pagination "  slot="pagination"></div> -->
     </swiper> 
 
     <!-- loading -->
@@ -115,10 +115,10 @@ export default {
           // activeIndex:0,
           // initialSlide:0, //设定初始化时slide的索引
           direction : 'horizontal', //滑动方向
-          pagination: { //分页器设置    
-              el: '.swiper-pagination',
-              clickable :true
-          },
+          // pagination: { //分页器设置    
+          //     el: '.swiper-pagination',
+          //     clickable :true
+          // },
           on:{
             init:function(){
               that.swiperObj = this
@@ -229,9 +229,10 @@ export default {
         this.swiperObj.activeIndex =index
         this.swiperObj.update()
         document.getElementById('swiper').style.display = 'block'
-       
-        
     },
+    addCar(){
+        this.$router.push({path:'/buycar',query:{id:111,number:222}})
+    }
   },
   created() {
     this.getInfo();
@@ -243,10 +244,6 @@ export default {
     window.addEventListener("scroll", this.scrollFun);
     document.getElementById('swiper').style.display = 'none'
     // console.log( document.getElementById('swiper'))
-     
-    
-
-
   },
 };
 </script>

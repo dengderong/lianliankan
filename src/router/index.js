@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import shareDetails from '@/pages/shareDetails'
-import bigImg from '@/components/shareDetails/bigImg'
+import buycar from '@/pages/buycar'
 
 Vue.use(Router)
 
@@ -16,11 +16,11 @@ export default new Router({
       }
     },
     {
-      path: '/bigImg',
-      name: 'bigImg',
-      component: bigImg,
+      path: '/buycar',
+      name: 'buycar',
+      component: buycar,
       meta:{
-        title: 'bigImg',
+        title: '购物车',
       }
     },
   ]
