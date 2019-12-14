@@ -189,7 +189,8 @@ export default {
       this.scroll = document.documentElement.scrollTop || document.body.scrollTop; //滚动条距离顶部的距离
       this.clienHeight = document.documentElement.clientHeight; //页面可见高度
       this.documentHeight = document.documentElement.offsetHeight; //页面总高度
-
+      console.log(this.scroll + this.clienHeight)
+      console.log(this.documentHeight)
       if (this.scroll + this.clienHeight == this.documentHeight) {
         if (this.page < this.totalPage) {
           this.loadingShow = 1;
@@ -266,7 +267,7 @@ export default {
   width: 490px;
 }
 .line {
-  border-bottom: 2px solid #888;
+  border-bottom: 3px solid #888;
   display: inline-block;
   width: 95px;
   margin-bottom: 10px;
@@ -275,7 +276,7 @@ export default {
   font-size: 36px;
   color: #333;
   padding: 0 5px;
-  font-weight: 540;
+  font-weight: 600;
 }
 .title .txt {
   margin-top: 22px;
@@ -347,7 +348,7 @@ export default {
   margin: 0;
   color: #2d8cf0;
   font-weight: 600;
-  font-size: 26px;
+  font-size: 28px;
   height: 50px;
   padding-bottom: 10px;
 }
@@ -384,7 +385,7 @@ export default {
 
 .choiceTxt {
   color: #cccccc;
-  font-size: 13px;
+  font-size: 20px;
   line-height: 50px;
   text-align: left;
 }
@@ -420,8 +421,8 @@ export default {
 .buyBtn {
   width:170px;
   height:60px;
-  font-size:16px;
-  line-height:16px;
+  font-size:24px;
+  line-height:60px;
   float: right;
   border: 0;
   background-color: #ef3830;
@@ -450,8 +451,8 @@ export default {
   right: 0;
   bottom: 0;
   margin: auto;
-  width: 130px;
-  height: 120px;
+  width: 230px;
+  height: 220px;
   background: pink;
 }
 .goodsTxt {
@@ -491,7 +492,7 @@ export default {
   border-radius: 50%;
   min-height: 30px;
   min-width: 30px;
-  font-size: 16px;
+  font-size: 20px;
   line-height: 30px;
 }
 .intheEnd{
@@ -500,7 +501,7 @@ export default {
   font-size:24px;
   text-align: center;
 }
-.swiper-container {
+.wrap .swiper-container {
   width: 100%;
   height: 100%;
   position: fixed;
@@ -512,13 +513,13 @@ export default {
   background: rgba(0, 0, 0, 1);
 }
 
-.swiper-wrapper .swiper-slide {
+.wrap .swiper-wrapper .swiper-slide {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.swiper-wrapper .swiper-slide img {
+.wrap .swiper-wrapper .swiper-slide img {
   width: 100%;
 }
 

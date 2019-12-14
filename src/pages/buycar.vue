@@ -28,8 +28,8 @@ export default {
 .addressTxt{
     background-color:#fff;
     padding: 20px 30px;
-    margin-bottom:20px;
-    border-radius:10px;
+    margin:20px 0;
+    border-radius:20px;
 }
 .addressTxt p:nth-child(1){
     display:flex;
@@ -47,7 +47,7 @@ export default {
     align-items:center;
     padding: 20px 30px;
     background-color:#fff;
-    border-radius:10px;
+    border-radius:20px;
 }
 .selectAddress .right{
     display:flex;
