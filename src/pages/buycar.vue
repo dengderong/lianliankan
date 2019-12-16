@@ -16,20 +16,20 @@
       </p>
     </div>
     <div class="selectList">
-      <p><img src="@/assets/true.png" alt=""><p>111111111111111111111111111111111111111111111111111111111111111</p></p>
+      <div class="addressItem clear">
+        <div class="left fl"><img src="@/assets/true.png" alt=""></div>
+        <div class="right fl">111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111</div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-
 export default {
   data() {
-    return {
-
-    }
+    return {};
   },
-  mothods:{}
+  mothods: {}
 };
 </script>
 
@@ -40,9 +40,26 @@ export default {
   background-color: #f5f5f5;
   height: 100vh;
 }
-.addressTxt p{
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
+.clear:after {
+  /*伪元素是行内元素 正常浏览器清除浮动方法*/
+  content: "";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+.clear{
+  zoom: 1; /*ie6清除浮动的方式 *号只有IE6-IE7执行，其他浏览器不执行*/
+}
+.addressTxt p {
   box-sizing: border-box;
-  padding:10px 0;
+  padding: 10px 0;
 }
 .addressTxt {
   background-color: #fff;
@@ -50,25 +67,22 @@ export default {
   margin-bottom: 20px;
   border-radius: 20px;
 }
-.addressTxt p:nth-child(1) span{
-   padding-right:10px;
+.addressTxt p:nth-child(1) span {
+  padding-right: 10px;
 }
-.addressTxt p:nth-child(1) span:nth-child(3){
-  border:1px solid  rgb(10, 182, 0,0.4 );
-  padding:4px 6px;
+.addressTxt p:nth-child(1) span:nth-child(3) {
+  border: 1px solid rgb(10, 182, 0, 0.4);
+  padding: 4px 6px;
   font-size: 20px;
-  color:rgba(0, 0, 0, 0.5);
+  color: rgba(0, 0, 0, 0.5);
   border-radius: 10px;
   box-sizing: border-box;
-  /* height:30px; */
-  line-height:22px;
-  /* display: flex; */
-  /* align-items:center; */
+  line-height: 22px;
 }
 
 .addressTxt p:nth-child(1) {
-  display:flex;
-  align-items: center
+  display: flex;
+  align-items: center;
 }
 .addressTxt p:nth-child(2) {
   text-align: left;
@@ -93,25 +107,14 @@ export default {
 .selectAddress .right span {
   padding-right: 8px;
 }
-.selectList{
-  margin-top:10px;
-  background-color:#fff;
+.selectList {
+  margin-top: 10px;
+  background-color: #fff;
   border-radius: 20px;
-  padding:20px;
+  padding: 20px;
 }
-.selectList>p{
-  display: flex;
-  justify-content: left;
-  align-items:center;
-  padding-left: 20px;
-}
-.selectList>p>img{
-  width:30px;
-  height:30px;
-  padding-right: 10px;
-}
-.selectList>p{
-  display:flex;
-  
+.addressItem .left img{
+  width:20px;
+  height:20px;
 }
 </style>
