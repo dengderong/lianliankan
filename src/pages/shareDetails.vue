@@ -189,9 +189,7 @@ export default {
       this.scroll = document.documentElement.scrollTop || document.body.scrollTop; //滚动条距离顶部的距离
       this.clienHeight = document.documentElement.clientHeight; //页面可见高度
       this.documentHeight = document.documentElement.offsetHeight; //页面总高度
-      console.log(this.scroll + this.clienHeight)
-      console.log(this.documentHeight)
-      if (this.scroll + this.clienHeight == this.documentHeight) {
+      if (this.scroll + this.clienHeight + 500 > this.documentHeight) {
         if (this.page < this.totalPage) {
           this.loadingShow = 1;
           this.page++;
@@ -494,6 +492,7 @@ export default {
   min-width: 30px;
   font-size: 20px;
   line-height: 30px;
+  text-align:center;
 }
 .intheEnd{
   color:#ccc;
