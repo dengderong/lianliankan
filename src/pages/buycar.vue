@@ -18,7 +18,7 @@
     <div class="selectList">
       <div class="addressItem clear">
         <div class="left fl"><img src="@/assets/true.png" alt=""></div>
-        <div class="right fl">111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111</div>
+        <div class="right fl">11111111111111</div>
       </div>
     </div>
   </div>
