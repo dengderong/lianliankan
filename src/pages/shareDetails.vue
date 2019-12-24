@@ -78,7 +78,7 @@
 <script>
 import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
-
+import sign from '@/sign/sign.js'
 export default {
   components: {
     swiper,
