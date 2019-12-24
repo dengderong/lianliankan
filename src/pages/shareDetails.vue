@@ -17,7 +17,7 @@
     <div class="contentList">
       <div class="item" v-for="(item,index) in data.dataList" :key="index">
         <div class="storeHeaderPic">
-            <img :src="item.brandPicture" alt />
+          <img :src="item.brandPicture" alt />
         </div>
         <div class="content">
           <div class="title">
@@ -28,11 +28,15 @@
               <del class="beforPrice">￥{{item.goodSkuList[0].marketPrice}}</del>
             </p>
           </div>
-          
-          
 
           <div class="imgList">
-            <img @click="openImg(item,index)"  v-for="(picItem,index) in item.goodPictureList" :key="index" :src="picItem" alt />
+            <img
+              @click="openImg(item,index)"
+              v-for="(picItem,index) in item.goodPictureList"
+              :key="index"
+              :src="picItem"
+              alt
+            />
           </div>
 
           <p class="choiceTxt">选择尺码，下单购买</p>
@@ -50,11 +54,12 @@
       </div>
     </div>
 
-
     <swiper :options="swiperOption" ref="mySwiper" id="swiper">
-          <swiper-slide v-for="(itemp,index) in swiperSlides" :key="index"> <img :src="itemp" alt=""> </swiper-slide>
-          <!-- <div class="swiper-pagination "  slot="pagination"></div> -->
-    </swiper> 
+      <swiper-slide v-for="(itemp,index) in swiperSlides" :key="index">
+        <img :src="itemp" alt />
+      </swiper-slide>
+      <!-- <div class="swiper-pagination "  slot="pagination"></div> -->
+    </swiper>
 
     <!-- loading -->
     <div class="c_loading" v-if="loadingShow">
@@ -68,33 +73,41 @@
     </div>
 
     <!-- in the end -->
-    <p class="intheEnd" v-if="intheEnd">
-      ----- 到底啦 o(^▽^)o -----
-    </p>
-
+    <p class="intheEnd" v-if="intheEnd">----- 到底啦 o(^▽^)o -----</p>
   </div>
 </template>
 
 <script>
+<<<<<<< HEAD
 import 'swiper/dist/css/swiper.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import sign from '@/sign/sign.js'
+=======
+import "swiper/dist/css/swiper.css";
+import { swiper, swiperSlide } from "vue-awesome-swiper";
+import sign from "@/sign.js";
+
+>>>>>>> 7c0c7ba009238682a55df06fe7aa914d7ac10abe
 export default {
   components: {
     swiper,
     swiperSlide
   },
   data: function() {
-    var that = this
+    var that = this;
     return {
       infoData: {},
       goodsIntroduction: {},
       contentList: {},
-      id: this.$route.query.id ? this.$route.query.id : 133,
+      id: this.$route.query.id ? this.$route.query.id : 2,
       userId: this.$route.query.userId ? this.$route.query.userId : 6,
-      addPrice: this.$route.query.addPrice ? Number(this.$route.query.addPrice) : 0,
+      addPrice: this.$route.query.addPrice
+        ? Number(this.$route.query.addPrice)
+        : 0,
       isShowSellOut: this.$route.query.isShowSellOut == "true" ? true : false,
       isAddAddress: this.$route.query.isAddAddress == "true" ? true : false,
+      isOrder: this.$route.query.isOrder == "true" ? true : false,
+      sign: this.$route.query.sign,
       data: {},
       btnActive: false,
       scroll: 0,
@@ -103,70 +116,80 @@ export default {
       loadingShow: 0,
       page: 1,
       totalPage: 0,
-      dataloading:{},
-      intheEnd:0,
-      swiperSlides:[],
-      swiperObj:{},
-      swiperIsshow:false,
-      swiperOption: {  
-          this:this,
-          notNextTick: true,
-          loop:false, //循环
-          // activeIndex:0,
-          // initialSlide:0, //设定初始化时slide的索引
-          direction : 'horizontal', //滑动方向
-          // pagination: { //分页器设置    
-          //     el: '.swiper-pagination',
-          //     clickable :true
-          // },
-          on:{
-            init:function(){
-              that.swiperObj = this
-            },
-            click:function(){
-              this.el.style.display = 'none'
-            }
+      dataloading: {},
+      intheEnd: 0,
+      swiperSlides: [],
+      swiperObj: {},
+      swiperIsshow: false,
+      swiperOption: {
+        this: this,
+        notNextTick: true,
+        loop: false, //循环
+        // activeIndex:0,
+        // initialSlide:0, //设定初始化时slide的索引
+        direction: "horizontal", //滑动方向
+        // pagination: { //分页器设置
+        //     el: '.swiper-pagination',
+        //     clickable :true
+        // },
+        on: {
+          init: function() {
+            that.swiperObj = this;
+          },
+          click: function() {
+            this.el.style.display = "none";
           }
+        }
       },
-      
+      header: {}
     };
   },
   methods: {
     getInfo: function() {
-      let url = "https://www.yidegz.cn/activity/goods/listActivityById";
-      this.axios
-        .post(url, {
-          id: this.id
-        })
-        .then(res => {
-          this.infoData = res.data.data;
-        });
+      // let url = "https://www.yidegz.cn/activity/goods/listActivityById";
+      let url = "https://www.yidegz.cn:10008/activity/goods/listActivityById";
+      this.axios({
+        methods: "post",
+        url: url,
+        data: this.id,
+        headers: this.header,
+        contentType: "application/json"
+      }).then(res => {
+        this.infoData = res.data.data;
+      });
     },
+
     getList() {
-      let url = "https://www.yidegz.cn/activity/goods/listActivityGoodsByPage";
-      this.axios
-        .post(url, {
+      // let url = "https://www.yidegz.cn/activity/goods/listActivityGoodsByPage";
+      let url =
+        "https://www.yidegz.cn:10008/activity/goods/listActivityGoodsByPage";
+      this.axios({
+        methods: "post",
+        url: url,
+        data: {
           id: this.id,
           pageSize: 5,
           pageNum: this.page
-        })
-        .then(res => {
-          // console.log(res);
-          this.data = res.data.data;
-          this.totalPage = this.data.totalPage;
-          //默认按钮不显示
-          this.data.dataList.forEach(item => {
-            item.goodSkuList.forEach(itemSku => {
-              itemSku.isShowt = false;
-            });
+        },
+        headers: this.header,
+        contentType: "application/json"
+      }).then(res => {
+        // console.log(res);
+        this.data = res.data.data;
+        this.totalPage = this.data.totalPage;
+        //默认按钮不显示
+        this.data.dataList.forEach(item => {
+          item.goodSkuList.forEach(itemSku => {
+            itemSku.isShowt = false;
           });
-          //判断是否显示全部
-          if (this.isShowSellOut) {
-            this.data.dataList.forEach(item => {
-              item.isShow = true;
-            });
-          }
         });
+        //判断是否显示全部
+        if (this.isShowSellOut) {
+          this.data.dataList.forEach(item => {
+            item.isShow = true;
+          });
+        }
+      });
     },
     selectSize(itemSku, indexSku, item, index) {
       //当库存为0是不让显示状态
@@ -186,15 +209,16 @@ export default {
       item.goodSkuList.sort();
     },
     scrollFun() {
-      this.scroll = document.documentElement.scrollTop || document.body.scrollTop; //滚动条距离顶部的距离
+      this.scroll =
+        document.documentElement.scrollTop || document.body.scrollTop; //滚动条距离顶部的距离
       this.clienHeight = document.documentElement.clientHeight; //页面可见高度
       this.documentHeight = document.documentElement.offsetHeight; //页面总高度
-
-      if (this.scroll + this.clienHeight == this.documentHeight) {
+      if (this.scroll + this.clienHeight + 500 > this.documentHeight) {
         if (this.page < this.totalPage) {
           this.loadingShow = 1;
           this.page++;
-          let url = "https://www.yidegz.cn/activity/goods/listActivityGoodsByPage";
+          let url =
+            "https://www.yidegz.cn/activity/goods/listActivityGoodsByPage";
           this.axios
             .post(url, {
               id: this.id,
@@ -216,35 +240,44 @@ export default {
                   item.isShow = true;
                 });
               }
-                this.data.dataList  = this.data.dataList.concat(this.dataloading.dataList)
+              this.data.dataList = this.data.dataList.concat(
+                this.dataloading.dataList
+              );
             });
-        }else{
-            this.loadingShow = 0
-            this.intheEnd = 1
+        } else {
+          this.loadingShow = 0;
+          this.intheEnd = 1;
         }
       }
     },
-    openImg(item,index){
-        this.swiperSlides = item.goodPictureList
-        this.swiperObj.activeIndex =index
-        this.swiperObj.update()
-        document.getElementById('swiper').style.display = 'block'
+    openImg(item, index) {
+      this.swiperSlides = item.goodPictureList;
+      this.swiperObj.activeIndex = index;
+      this.swiperObj.update();
+      document.getElementById("swiper").style.display = "block";
     },
-    addCar(){
-        this.$router.push({path:'/buycar',query:{id:111,number:222}})
+    addCar() {
+      this.$router.push({ path: "/buycar", query: { id: 111, number: 222 } });
     }
   },
   created() {
+    this.header = sign.saveSign({
+        id: this.id,
+        userId: this.userId,
+        addPrice: this.addPrice,
+        isOrder: this.isOrder,
+        isShowSellOut: this.isShowSellOut,
+        isAddAddress: this.isAddAddress,
+        sign: this.sign
+    });
     this.getInfo();
     this.getList();
   },
- 
 
   mounted() {
     window.addEventListener("scroll", this.scrollFun);
-    document.getElementById('swiper').style.display = 'none'
-    // console.log( document.getElementById('swiper'))
-  },
+    document.getElementById("swiper").style.display = "none";
+  }
 };
 </script>
 
@@ -264,9 +297,10 @@ export default {
 .goodsIntroduction > .title {
   margin: 0 auto;
   width: 490px;
+  text-align: center;
 }
 .line {
-  border-bottom: 2px solid #888;
+  border-bottom: 3px solid #888;
   display: inline-block;
   width: 95px;
   margin-bottom: 10px;
@@ -275,7 +309,7 @@ export default {
   font-size: 36px;
   color: #333;
   padding: 0 5px;
-  font-weight: 540;
+  font-weight: 600;
 }
 .title .txt {
   margin-top: 22px;
@@ -347,7 +381,7 @@ export default {
   margin: 0;
   color: #2d8cf0;
   font-weight: 600;
-  font-size: 26px;
+  font-size: 28px;
   height: 50px;
   padding-bottom: 10px;
 }
@@ -384,18 +418,18 @@ export default {
 
 .choiceTxt {
   color: #cccccc;
-  font-size: 13px;
+  font-size: 20px;
   line-height: 50px;
   text-align: left;
 }
 
 .sizeList {
   display: flex;
-  flex-wrap:wrap;
+  flex-wrap: wrap;
   background: #f5f5f5;
   text-align: left;
   border-radius: 5px;
-  padding:12px 12px 0 12px;
+  padding: 12px 12px 0 12px;
 }
 
 .sizeList span {
@@ -403,7 +437,7 @@ export default {
   background-color: #d9d9d9;
   color: #444243;
   padding: 10px;
-  margin:0 12px 12px 0;
+  margin: 0 12px 12px 0;
   border-radius: 5px;
 }
 
@@ -418,16 +452,16 @@ export default {
 }
 
 .buyBtn {
-  width:170px;
-  height:60px;
-  font-size:16px;
-  line-height:16px;
+  width: 170px;
+  height: 60px;
+  font-size: 24px;
+  line-height: 60px;
   float: right;
   border: 0;
   background-color: #ef3830;
   color: #ffffff;
   /* padding: 8px 12px; */
-  padding:0;
+  padding: 0;
   margin-top: 35px;
   font-weight: bold;
   border-radius: 5px;
@@ -450,8 +484,8 @@ export default {
   right: 0;
   bottom: 0;
   margin: auto;
-  width: 130px;
-  height: 120px;
+  width: 230px;
+  height: 220px;
   background: pink;
 }
 .goodsTxt {
@@ -491,16 +525,17 @@ export default {
   border-radius: 50%;
   min-height: 30px;
   min-width: 30px;
-  font-size: 16px;
+  font-size: 20px;
   line-height: 30px;
-}
-.intheEnd{
-  color:#ccc;
-  line-height: 90px;
-  font-size:24px;
   text-align: center;
 }
-.swiper-container {
+.intheEnd {
+  color: #ccc;
+  line-height: 90px;
+  font-size: 24px;
+  text-align: center;
+}
+.wrap .swiper-container {
   width: 100%;
   height: 100%;
   position: fixed;
@@ -512,14 +547,13 @@ export default {
   background: rgba(0, 0, 0, 1);
 }
 
-.swiper-wrapper .swiper-slide {
+.wrap .swiper-wrapper .swiper-slide {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.swiper-wrapper .swiper-slide img {
+.wrap .swiper-wrapper .swiper-slide img {
   width: 100%;
 }
-
 </style>
