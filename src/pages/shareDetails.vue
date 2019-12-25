@@ -78,16 +78,10 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-import 'swiper/dist/css/swiper.css'
-import { swiper, swiperSlide } from 'vue-awesome-swiper'
-import sign from '@/sign/sign.js'
-=======
 import "swiper/dist/css/swiper.css";
 import { swiper, swiperSlide } from "vue-awesome-swiper";
-import sign from "@/sign.js";
+import sign from "@/sign/sign.js";
 
->>>>>>> 7c0c7ba009238682a55df06fe7aa914d7ac10abe
 export default {
   components: {
     swiper,
@@ -146,8 +140,8 @@ export default {
   },
   methods: {
     getInfo: function() {
-      // let url = "https://www.yidegz.cn/activity/goods/listActivityById";
-      let url = "https://www.yidegz.cn:10008/activity/goods/listActivityById";
+      let url = "https://www.yidegz.cn/activity/goods/listActivityById";
+      // let url = "https://www.yidegz.cn:10008/activity/goods/listActivityById";
       this.axios({
         methods: "post",
         url: url,
@@ -160,9 +154,8 @@ export default {
     },
 
     getList() {
-      // let url = "https://www.yidegz.cn/activity/goods/listActivityGoodsByPage";
-      let url =
-        "https://www.yidegz.cn:10008/activity/goods/listActivityGoodsByPage";
+      let url = "https://www.yidegz.cn/activity/goods/listActivityGoodsByPage";
+      // let url ="https://www.yidegz.cn:10008/activity/goods/listActivityGoodsByPage";
       this.axios({
         methods: "post",
         url: url,
@@ -262,13 +255,13 @@ export default {
   },
   created() {
     this.header = sign.saveSign({
-        id: this.id,
-        userId: this.userId,
-        addPrice: this.addPrice,
-        isOrder: this.isOrder,
-        isShowSellOut: this.isShowSellOut,
-        isAddAddress: this.isAddAddress,
-        sign: this.sign
+      id: this.id,
+      userId: this.userId,
+      addPrice: this.addPrice,
+      isOrder: this.isOrder,
+      isShowSellOut: this.isShowSellOut,
+      isAddAddress: this.isAddAddress,
+      sign: this.sign
     });
     this.getInfo();
     this.getList();
