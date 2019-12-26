@@ -80,7 +80,7 @@
 <script>
 import "swiper/dist/css/swiper.css";
 import { swiper, swiperSlide } from "vue-awesome-swiper";
-import sign from "@/sign/sign.js";
+import sign from "@/sign/sign";
 
 export default {
   components: {
@@ -254,7 +254,7 @@ export default {
     }
   },
   created() {
-    this.header = sign.saveSign({
+    this.header = sign.signHeaderAddSave({
       id: this.id,
       userId: this.userId,
       addPrice: this.addPrice,
@@ -265,6 +265,7 @@ export default {
     });
     this.getInfo();
     this.getList();
+    sign.test()
   },
 
   mounted() {
