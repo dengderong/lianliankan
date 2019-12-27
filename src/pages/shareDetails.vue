@@ -80,7 +80,9 @@
 <script>
 import "swiper/dist/css/swiper.css";
 import { swiper, swiperSlide } from "vue-awesome-swiper";
-import sign from "@/sign/sign";
+import sign from "@/sign/sign.js";
+import api from "@/servers/index";
+import { async } from "q";
 
 export default {
   components: {
@@ -135,54 +137,38 @@ export default {
           }
         }
       },
-      header: {}
+      headers: {}
     };
   },
   methods: {
-    getInfo: function() {
-      let url = "https://www.yidegz.cn/activity/goods/listActivityById";
-      // let url = "https://www.yidegz.cn:10008/activity/goods/listActivityById";
-      this.axios({
-        methods: "post",
-        url: url,
-        data: this.id,
-        headers: this.header,
-        contentType: "application/json"
-      }).then(res => {
+    getInfo() {
+      api.postInfo({id:this.id},this.headers).then(res => {
         this.infoData = res.data.data;
       });
     },
-
     getList() {
-      let url = "https://www.yidegz.cn/activity/goods/listActivityGoodsByPage";
-      // let url ="https://www.yidegz.cn:10008/activity/goods/listActivityGoodsByPage";
-      this.axios({
-        methods: "post",
-        url: url,
-        data: {
-          id: this.id,
-          pageSize: 5,
-          pageNum: this.page
-        },
-        headers: this.header,
-        contentType: "application/json"
-      }).then(res => {
-        // console.log(res);
-        this.data = res.data.data;
-        this.totalPage = this.data.totalPage;
-        //默认按钮不显示
-        this.data.dataList.forEach(item => {
-          item.goodSkuList.forEach(itemSku => {
-            itemSku.isShowt = false;
-          });
-        });
-        //判断是否显示全部
-        if (this.isShowSellOut) {
+      api
+        .postList(
+          { id: this.id, pageSize: 5, pageNum: this.page },
+          this.headers
+        )
+        .then(res => {
+          // console.log(res);
+          this.data = res.data.data;
+          this.totalPage = this.data.totalPage;
+          //默认按钮不显示
           this.data.dataList.forEach(item => {
-            item.isShow = true;
+            item.goodSkuList.forEach(itemSku => {
+              itemSku.isShowt = false;
+            });
           });
-        }
-      });
+          //判断是否显示全部
+          if (this.isShowSellOut) {
+            this.data.dataList.forEach(item => {
+              item.isShow = true;
+            });
+          }
+        });
     },
     selectSize(itemSku, indexSku, item, index) {
       //当库存为0是不让显示状态
@@ -201,23 +187,20 @@ export default {
       }
       item.goodSkuList.sort();
     },
-    scrollFun() {
+   async scrollFun() {
       this.scroll =
         document.documentElement.scrollTop || document.body.scrollTop; //滚动条距离顶部的距离
       this.clienHeight = document.documentElement.clientHeight; //页面可见高度
       this.documentHeight = document.documentElement.offsetHeight; //页面总高度
-      if (this.scroll + this.clienHeight + 500 > this.documentHeight) {
+      if (this.scroll + this.clienHeight  ==  this.documentHeight) {
         if (this.page < this.totalPage) {
           this.loadingShow = 1;
           this.page++;
-          let url =
-            "https://www.yidegz.cn/activity/goods/listActivityGoodsByPage";
-          this.axios
-            .post(url, {
-              id: this.id,
-              pageSize: 5,
-              pageNum: this.page
-            })
+           api
+            .postList(
+              { id: this.id, pageSize: 5, pageNum: this.page },
+              this.headers
+            )
             .then(res => {
               this.loadingShow = 0;
               this.dataloading = res.data.data;
@@ -254,7 +237,7 @@ export default {
     }
   },
   created() {
-    this.header = sign.signHeaderAddSave({
+    this.headers = sign.signHeaderAddSave({
       id: this.id,
       userId: this.userId,
       addPrice: this.addPrice,
@@ -265,7 +248,6 @@ export default {
     });
     this.getInfo();
     this.getList();
-    sign.test()
   },
 
   mounted() {

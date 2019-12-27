@@ -16,7 +16,7 @@
       </p>
     </div>
     <div class="selectList">
-      <div class="addressItem clear">
+      <div class="selectItem clear">
         <div class="left fl"><img src="@/assets/true.png" alt=""></div>
         <div class="right fl">11111111111111</div>
       </div>
@@ -71,10 +71,11 @@ export default {
   padding-right: 10px;
 }
 .addressTxt p:nth-child(1) span:nth-child(3) {
-  border: 1px solid rgb(10, 182, 0, 0.4);
+  /* border: 1px solid rgb(10, 182, 0, 0.4); */
+  border: 1px solid #EF3830;
   padding: 4px 6px;
   font-size: 20px;
-  color: rgba(0, 0, 0, 0.5);
+  color:  #9f9f9f;
   border-radius: 10px;
   box-sizing: border-box;
   line-height: 22px;
@@ -113,8 +114,9 @@ export default {
   border-radius: 20px;
   padding: 20px;
 }
-.addressItem .left img{
+.selectItem .left img{
   width:20px;
   height:20px;
+  padding-right:20px;
 }
 </style>

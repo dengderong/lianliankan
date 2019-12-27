@@ -5,11 +5,12 @@ import api from '@/servers/index'
 const saveSign = (obj) => {
   let h5Sign = signToString(obj)
   sessionStorage.setItem('h5Sign', h5Sign)
+  return h5Sign
 }
 
 //是否正规的签名对象
 const isH5SignObj = (signObj) => {
-  return 'object' === typeof (signObj) && signObj.sign
+  return 'object' === typeof (signObj) && signObj.sign != undefined
 }
 
 //获取签名对象（防空解析）
@@ -50,7 +51,7 @@ const addSignToString = (addParam, oldParam) => {
 //获取请求头
 const signHeader = (addParam) => {
   let header = {
-    "Content-Type": "application/json;charset=utf8",
+    "Content-Type":"application/json;charset=utf8"
   };
 
   header.h5Sign = addParam !== undefined
@@ -78,10 +79,7 @@ const addSignAndSave = (addParam,oldParam) => {
   return saveSign(h5Sign)
 }
 
-// const test = () =>{
-//    alert(this.header)
-//    debugger
-// }
+
 
 export default {
   saveSign,
