@@ -1,12 +1,14 @@
 <template>
-  <div class="wrap">
+  <div class="wrap1">
     <!-- 头部信息 -->
     <div class="goodsIntroduction">
-      <div class="title">
-        <span class="line"></span>
-        <span>{{infoData.activityBrandName}}</span>
-        <span class="line"></span>
-        <p class="txt">{{infoData.activityRemark}}</p>
+      <div class="goodsInfo">
+        <div class="title">
+          <p class="line"></p>
+          <p>{{infoData.activityBrandName}}</p>
+          <p class="line"></p>
+        </div>
+        <div class="txt">{{infoData.activityRemark}}</div>
       </div>
       <div class="content">
         <img v-for="item in infoData.activityPictureList" :key="item.id" :src="item" alt />
@@ -15,7 +17,7 @@
 
     <!-- 图片列表 -->
     <div class="contentList">
-      <div class="item" v-for="(item,index) in data.dataList" :key="index">
+      <div class="item" v-for="(item,index) in data.dataList" :key="index" ref="item">
         <div class="storeHeaderPic">
           <img :src="item.brandPicture" alt />
         </div>
@@ -40,7 +42,7 @@
           </div>
 
           <p class="choiceTxt">选择尺码，下单购买</p>
-          <div class="sizeList">
+          <div class="sizeList" >
             <span
               @click="selectSize(itemSku,indexSku,item,index)"
               :class="{'disabled':itemSku.activitySkuNum == 0,'active':itemSku.isShowt}"
@@ -49,7 +51,7 @@
               :ref="`sizeDom${index}`"
             >{{itemSku.skuName}}</span>
           </div>
-          <button class="buyBtn" @click="addCar">加入购物车</button>
+          <button class="buyBtn" @click="addCar(item,index)">加入购物车</button>
         </div>
       </div>
     </div>
@@ -67,9 +69,9 @@
     </div>
 
     <!-- shoppingcar -->
-    <div class="shoppingcar">
+    <div class="shoppingcar" @click="goToCar">
       <img src="@/assets/car.png" alt />
-      <p class="count">2</p>
+      <p class="count">{{carNum}}</p>
     </div>
 
     <!-- in the end -->
@@ -82,7 +84,6 @@ import "swiper/dist/css/swiper.css";
 import { swiper, swiperSlide } from "vue-awesome-swiper";
 import sign from "@/sign/sign.js";
 import api from "@/servers/index";
-import { async } from "q";
 
 export default {
   components: {
@@ -137,23 +138,23 @@ export default {
           }
         }
       },
-      headers: {}
+      headers: {},
+      carNum:0,
     };
   },
   methods: {
-    getInfo() {
-      api.postInfo({id:this.id},this.headers).then(res => {
+  async getInfo() {
+    await api.postInfo({ id: this.id }, this.headers).then(res => {
         this.infoData = res.data.data;
       });
     },
-    getList() {
-      api
+  async  getList() {
+     await api
         .postList(
           { id: this.id, pageSize: 5, pageNum: this.page },
           this.headers
         )
         .then(res => {
-          // console.log(res);
           this.data = res.data.data;
           this.totalPage = this.data.totalPage;
           //默认按钮不显示
@@ -171,11 +172,13 @@ export default {
         });
     },
     selectSize(itemSku, indexSku, item, index) {
+    
+       //addPrice=0&isShowSellOut=true&id=6D336654744B504730614A396C4F5973724D34596E773D3D&isAddAddress=true&userId=364E755A4764447567364F4D786752547049346D2B673D3D&isOrder=true&sign=dc206eb5d3daa975afc8e5fa5967120e70f3cb10defb5a6dfaf8b7c2a743433b
+       //addPrice 加价价钱 ， isShowSellOut 是否显示缺货商品,  id活动id , isAddAddress 是否允许活动添加地址  , userId app用户id , isOrder 是否运行下单 , sign 签名
       //当库存为0是不让显示状态
       item.goodSkuList.forEach(val => {
         if (
-          val.activitySkuNum == 0 ||
-          this.$refs[`sizeDom${index}`][indexSku].className == "disabled"
+          val.activitySkuNum == 0 || this.$refs[`sizeDom${index}`][indexSku].className == "disabled"
         ) {
           itemSku.isShowt = false;
         } else {
@@ -187,16 +190,16 @@ export default {
       }
       item.goodSkuList.sort();
     },
-   async scrollFun() {
+    async scrollFun() {
       this.scroll =
         document.documentElement.scrollTop || document.body.scrollTop; //滚动条距离顶部的距离
       this.clienHeight = document.documentElement.clientHeight; //页面可见高度
       this.documentHeight = document.documentElement.offsetHeight; //页面总高度
-      if (this.scroll + this.clienHeight  ==  this.documentHeight) {
+      if (this.scroll + this.clienHeight == this.documentHeight) {
         if (this.page < this.totalPage) {
           this.loadingShow = 1;
           this.page++;
-           api
+          api
             .postList(
               { id: this.id, pageSize: 5, pageNum: this.page },
               this.headers
@@ -232,11 +235,29 @@ export default {
       this.swiperObj.update();
       document.getElementById("swiper").style.display = "block";
     },
-    addCar() {
-      this.$router.push({ path: "/buycar", query: { id: 111, number: 222 } });
+    addCar(item,index) {
+        //每件商品的价格  和 号码 存到是localsitonns
+        let size = this.$refs.item[index].children[1].children[3]
+        let child = size.firstElementChild
+      
+        while(child){
+          if(child.className == 'active'){
+               item.selectSize = child.innerHTML
+               localStorage.setItem(`goods${index}`, JSON.stringify(item))
+               localStorage.setItem('test',[{a:1,b:2}])
+               this.carNum = localStorage.length
+               return;
+          }
+          child = child.nextElementSibling;
+        }
+        alert('请选择一件商品')
+    },
+    goToCar() {
+      this.$router.push({ path: "/buycar", query: { isAddAddress: this.isAddAddress, addPrice: this.addPrice, userId: this.userId } });
     }
   },
   created() {
+    this.carNum = localStorage.length
     this.headers = sign.signHeaderAddSave({
       id: this.id,
       userId: this.userId,
@@ -248,6 +269,11 @@ export default {
     });
     this.getInfo();
     this.getList();
+    
+   
+  },
+  watch:{
+   
   },
 
   mounted() {
@@ -258,9 +284,8 @@ export default {
 </script>
 
 <style>
-.wrap {
-  margin: 50px auto 10px;
-  height: auto;
+.wrap1 {
+  padding-top: 50px;
 }
 .goodsIntroduction {
   width: 646px;
@@ -270,24 +295,49 @@ export default {
   border-top-left-radius: 50px;
   border-bottom-right-radius: 50px;
 }
-.goodsIntroduction > .title {
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
+.clear:after {
+  /*伪元素是行内元素 正常浏览器清除浮动方法*/
+  content: "";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+.clear {
+  zoom: 1; /*ie6清除浮动的方式 *号只有IE6-IE7执行，其他浏览器不执行*/
+}
+.wrap1 .goodsInfo {
   margin: 0 auto;
   width: 490px;
   text-align: center;
 }
-.line {
-  border-bottom: 3px solid #888;
-  display: inline-block;
-  width: 95px;
-  margin-bottom: 10px;
+.wrap1 .goodsInfo .title {
+  display: flex;
+  flex-flow: row nowrap;
+  /* text-align:center; */
+  align-items: center;
+  justify-content: center;
 }
-.goodsIntroduction .title span:nth-child(2) {
+.wrap1 .goodsInfo .line {
+  border-bottom: 2px solid #000;
+  width: 11%;
+  padding-top: 2px;
+}
+
+.wrap1 .goodsInfo .title p:nth-child(2) {
   font-size: 36px;
   color: #333;
-  padding: 0 5px;
   font-weight: 600;
+  padding: 0 20px;
+  /* width:76% */
 }
-.title .txt {
+.wrap1 .goodsInfo .txt {
   margin-top: 22px;
   font-size: 28px;
   text-align: justify;
@@ -298,6 +348,7 @@ export default {
   -webkit-line-clamp: 2;
   color: #888;
 }
+
 .goodsIntroduction > .content {
   margin: 0 auto;
   display: flex;
@@ -359,7 +410,7 @@ export default {
   font-weight: 600;
   font-size: 28px;
   height: 50px;
-  padding-bottom: 10px;
+  padding-bottom: 40px;
 }
 .price {
   font-size: 30px;
@@ -436,11 +487,11 @@ export default {
   border: 0;
   background-color: #ef3830;
   color: #ffffff;
-  /* padding: 8px 12px; */
   padding: 0;
   margin-top: 35px;
   font-weight: bold;
   border-radius: 5px;
+  outline: 0;
 }
 
 .c_loading {
@@ -511,7 +562,7 @@ export default {
   font-size: 24px;
   text-align: center;
 }
-.wrap .swiper-container {
+.wrap1 .swiper-container {
   width: 100%;
   height: 100%;
   position: fixed;
@@ -523,13 +574,13 @@ export default {
   background: rgba(0, 0, 0, 1);
 }
 
-.wrap .swiper-wrapper .swiper-slide {
+.wrap1 .swiper-wrapper .swiper-slide {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.wrap .swiper-wrapper .swiper-slide img {
+.wrap1 .swiper-wrapper .swiper-slide img {
   width: 100%;
 }
 </style>
