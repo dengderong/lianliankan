@@ -9,7 +9,7 @@
     <div class="address_input" v-if="isAddAddress">
       <div class="address_item">
         <span>收货人</span>
-        <input name="receiverName" placeholder="请输入收货人姓名"/>
+        <input name="receiverName" placeholder="请输入收货人姓名" />
       </div>
       <div class="address_item">
         <span>电话</span>
@@ -17,12 +17,11 @@
       </div>
       <div class="address_item">
         <span>地区</span>
-        <input id="demo" name="receiver" type="text" readonly="" placeholder="请选择地区" value=""/>
-        <input id="value" type="hidden" name="receiverCode" value="20,234,504" />
+        <input @click="cityShow()" type="text" readonly placeholder="请选择地区"/>
       </div>
       <div class="address_item">
         <span>详细地址</span>
-        <input name="receiverAddress" placeholder="请输入收货人详细地址"/>
+        <input name="receiverAddress" placeholder="请输入收货人详细地址" />
       </div>
     </div>
 
@@ -46,7 +45,7 @@
       <input type="text" placeholder="为了方便配货请输入您的姓名" />
     </div>
 
-    <div class="footer">
+    <div class="footer" v-if="footerIsShow">
       <p>
         总金额
         <span>￥{{totalPrice}}</span>
@@ -54,24 +53,35 @@
       <p>
         <button class="settlement" @click="settlement()">立即购买</button>
       </p>
+      
     </div>
+
+     <Area :area-list="areaList"  v-if="cityIsShow" @cancel="cityClose" @confirm="cityConfirm" />
+ 
+    
+   
   </div>
 </template>
 
 <script>
 import api from "@/servers/index";
-import '@/assets/css/LArea.min.css'
-import LAreaData from '@/assets/js/city.data.min'
-import LArea from '@/assets/js/LArea.min.js'
+import city from '@/assets/js/city.js';
+import { Area } from 'vant';
 
 
 export default {
+  components:{
+    Area
+  },
   data() {
     return {
       totalPrice: 0,
       isAddAddress: true,
       userId: "",
-      defaultAddress:{}
+      defaultAddress:{},
+      areaList:city,
+      cityIsShow:false,
+      footerIsShow:true,
     };
   },
   methods: {
@@ -86,7 +96,20 @@ export default {
     },
     settlement(){
         alert(11111111)
-    }
+    },
+    cityShow(){
+        this.cityIsShow = !this.cityIsShow
+        this.footerIsShow = !this.footerIsShow
+    },
+    cityClose(){
+      this.cityIsShow = !this.cityIsShow
+      this.footerIsShow = !this.footerIsShow
+    },
+    cityConfirm(arr){
+        console.log(arr)
+    },
+
+
   },
   created() {
     let pathObj = JSON.parse(localStorage.getItem("path"));
@@ -95,20 +118,6 @@ export default {
     this.totalPrice = localStorage.getItem("totalPrice");
     !this.isAddAddress ? this.postAddress() : "";
   },
-  mounted(){
-     LArea.LArea.prototype.init({
-        'trigger': '#demo', //触发选择控件的文本框，同时选择完毕后name属性输出到该位置
-        'valueTo': '#value', //选择完毕后id属性输出到该位置
-        'keys': {
-            id: 'value',
-            name: 'text'
-        }, //绑定数据源相关字段 id对应valueTo的value属性输出 name对应trigger的value属性输出
-        'type': 1, //数据源类型
-        'data': LAreaData.LAreaData //数据源
-    })
-    
-    // console.log(document.querySelector('#demo'))
-  }
 };
 </script>
 
@@ -220,17 +229,35 @@ export default {
   height: 65px;
 }
 .address_item input {
-  height:30px;
-  width:420px;
+  height: 30px;
+  width: 420px;
   padding: 10px 10px 10px 30px;
   border: 0;
   outline: none;
   resize: none;
-  text-align:right;
+  text-align: right;
   font-size: 28px;
   box-shadow: none;
   appearance: none;
   -moz-appearance: none; /* Firefox */
   -webkit-appearance: none; /* Safari 和 Chrome */
+}
+.van-picker__toolbar{
+  height: auto!important;
+}
+.van-picker{
+  margin-top:30px;
+  border-radius:15px;
+  width:100%;
+  position:fixed;
+  left:0;
+  bottom: 0;
+}
+.van-picker__cancel, .van-picker__confirm{
+  padding:10px 42px!important;
+  font-size:28px!important;
+}
+.van-picker-column{
+  font-size:28px!important;
 }
 </style>
