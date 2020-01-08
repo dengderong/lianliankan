@@ -5,13 +5,16 @@
         <img src="@/assets/left.png" />
         <span>购物车</span>
       </p>
-      <p class="bottom">配送白云区石井街道</p>
+      <p
+        class="bottom"
+        v-if="!isAddAddress"
+      >{{defaultAddress.receiverProvince+defaultAddress.receiverCity+defaultAddress.receiverCounty}}</p>
     </div>
 
     <div class="content">
       <div class="contentwarp">
         <div class="content_title">精选特卖</div>
-        <div class="item"  v-for="(item,index) in dataList" :key="index" ref="itembuy">
+        <div class="item" v-for="(item,index) in dataList" :key="index" ref="itembuy">
           <div class="left">
             <img :src="item.goodPictureList[0]" />
           </div>
@@ -28,10 +31,10 @@
               <p>-</p>
               <p>{{this.inputNumber}}</p>
               <p>+</p>
-            </div> -->
+            </div>-->
           </div>
           <div class="right">
-            <p class="sell_price">{{item.suggestPrice+addPrice}}</p>
+            <p class="sell_price">{{Number(item.suggestPrice)+Number(addPrice)}}</p>
             <p class="close" @click="del(index)">
               <img src="@/assets/close.png" />
             </p>
@@ -40,61 +43,101 @@
       </div>
 
       <div class="statistics">
-        <p>￥459</p>
+        <p>￥{{totalPrice}}</p>
         <p>商品已享受超级VIP尊享无限次免邮</p>
       </div>
     </div>
-
     <div class="footer">
-      <p>总金额<span>￥459</span></p>
-      <p><button class="settlement" @click="goSettlement">结算</button></p>
+      <p>
+        总金额
+        <span>￥{{totalPrice}}</span>
+      </p>
+      <p>
+        <button class="settlement" @click="goConfirm">结算</button>
+      </p>
     </div>
   </div>
 </template>
 
 <script>
+import api from "@/servers/index";
 export default {
-  data(){
-    return{
-       inputNumber:10,
-       dataList:[],
-       addPrice:this.$route.query.addPrice
+  data() {
+    return {
+      //  inputNumber:10,
+      dataList: [],
+      addPrice: 0,
+      isAddAddress: true,
+      defaultAddress: {},
+      userId: ""
+    };
+  },
+  methods: {
+    goConfirm() {
+      if(this.totalPrice == 0){
+          alert('请购买商品后再结算')
+          return
+      }
+      this.$router.push({ path: "/confirmOrder" });
+    },
+    goBack() {
+      this.$router.go(-1);
+    },
+    del(indexVal) {
+      this.dataList = this.dataList.filter((item, index) => index != indexVal);
+      localStorage.setItem("dataList", JSON.stringify(this.dataList));
+      console.log(this.dataList);
+    },
+    postAddress() {
+      let headers = JSON.parse(localStorage.getItem("headers"));
+      api.postDefaultAddress({ userId: this.userId }, headers).then(res => {
+        this.defaultAddress = res.data.data;
+      });
     }
   },
-  methods:{
-    goSettlement(){
-       this.$router.push({path:'/confirmOrder',query:{id:111}})
-    },
-    goBack(){
-       this.$router.go(-1)
-    },
-    del(indexVal){
-      console.log(indexVal)
-      console.log(localStorage)
-      this.dataList = this.dataList.filter( (item,index) =>  index != indexVal )
-      localStorage.removeItem(`goods${indexVal}`)
-      
+  computed: {
+    totalPrice() {
+      let totalPrice = 0;
+      if (this.dataList) {
+        this.dataList.forEach(item => {
+          totalPrice += Number(item.suggestPrice) + Number(this.addPrice);
+        });
+        localStorage.setItem("totalPrice", totalPrice);
+      }
+      return totalPrice;
     }
-
   },
-  created(){
-     let x
-     for(x in localStorage){
-       if(!x.indexOf('goods')){
-          this.dataList.push(JSON.parse(localStorage[x]))
-       }
-     }
-     console.log(localStorage)
+  created() {
+    let pathObj = JSON.parse(localStorage.getItem("path"));
+    this.addPrice = pathObj.addPrice;
+    this.isAddAddress = pathObj.isAddAddress;
+    this.userId = pathObj.userId;
+    !this.isAddAddress ? this.postAddress() : "";
+    this.dataList = JSON.parse(localStorage.getItem("dataList"));
+  },
+  mounted(){
+    var area = window.LArea
+     area.init({
+        'trigger': '#demo', //触发选择控件的文本框，同时选择完毕后name属性输出到该位置
+        'valueTo': '#value', //选择完毕后id属性输出到该位置
+        'keys': {
+            id: 'value',
+            name: 'text'
+        }, //绑定数据源相关字段 id对应valueTo的value属性输出 name对应trigger的value属性输出
+        'type': 1, //数据源类型
+        'data': LAreaData //数据源
+    });
+    // console.log(window.LArea)
   }
-}
+};
 </script>
 
 <style>
 .wrap2 {
   font-size: 28px;
   background-color: #f2f2f2;
-  padding: 0 20px;
-  height:100vh;
+  padding: 0 20px 250px;
+  min-height: 100vh;
 }
 .fl {
   float: left;
@@ -144,8 +187,7 @@ export default {
   /* padding-bottom:400px; */
 }
 
-
-.contentwarp{
+.contentwarp {
   padding: 35px 30px;
 }
 .content_title {
@@ -211,7 +253,7 @@ export default {
   width: 100%;
 }
 .goodsIcon {
-  margin-bottom: 22px;
+  margin-bottom: 10px;
 }
 .goodsIcon span {
   display: inline-block;
@@ -249,49 +291,46 @@ export default {
   padding: 40px 30px;
   border-top: 1px solid #eee;
 }
-.wrap2 .statistics p:nth-child(1){
-  text-align:right;
-  padding-bottom:20px;
-  font-weight:bold;
-  font-size:30px;
-  font-family:'Microsoft JhengHei';
+.wrap2 .statistics p:nth-child(1) {
+  text-align: right;
+  padding-bottom: 20px;
+  font-weight: bold;
+  font-size: 30px;
+  font-family: "Microsoft JhengHei";
 }
-.wrap2 .statistics p:nth-child(2){
-  color:#999;
-  font-size:20px;
+.wrap2 .statistics p:nth-child(2) {
+  color: #999;
+  font-size: 20px;
 }
-.footer{
-  height:200px;
-  width:100%;
-  position:fixed;
-  bottom:0;
-  left:0;
-  background-color:#fff;
-  border-top:2px solid #eee;
-  
+.wrap2 .footer {
+  height: 200px;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  background-color: #fff;
+  border-top: 2px solid #eee;
 }
-.footer p:nth-child(1){
-   text-align:center;
-   line-height:80px;
+.wrap2 .footer p:nth-child(1) {
+  text-align: center;
+  line-height: 80px;
 }
-.footer p:nth-child(1) span{
-  font-size:36px;
-  color:#ef3830;
+.wrap2 .footer p:nth-child(1) span {
+  font-size: 36px;
+  color: #ef3830;
   /* font-weight:bold; */
 }
-.footer p:nth-child(2){
-  text-align:center;
+.wrap2 .footer p:nth-child(2) {
+  text-align: center;
 }
-.footer p:nth-child(2) button{
-  width:94%;
-  outline:0;
-  border:0;
-  background-color:#ef3830;
-  color:#fff;
-  border-radius:40px;
-  padding:15px 0;
-  font-size:30px;
- 
+.wrap2 .footer p:nth-child(2) button {
+  width: 94%;
+  outline: 0;
+  border: 0;
+  background-color: #ef3830;
+  color: #fff;
+  border-radius: 40px;
+  padding: 15px 0;
+  font-size: 30px;
 }
-
 </style>

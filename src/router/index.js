@@ -14,10 +14,9 @@ export default new Router({
       component: shareDetails,
       meta: {
         title: '商品详情',
-        index: 1,
+        // index: 1,
         keepAlive: true,
       },
-      // component: resolve => require.ensure([])
     },
     {
       path: '/buycar',
@@ -25,8 +24,8 @@ export default new Router({
       component: buycar,
       meta: {
         title: '购物车',
-        index: 2,
-        keepAlive: true,
+        // index: 2,
+        // keepAlive: true,
       }
     },
     {
@@ -35,8 +34,7 @@ export default new Router({
       component: confirmOrder,
       meta: {
         title: '确认订单',
-        index: 3,
-        keepAlive: true,
+        // index: 3,
       }
     },
   ]

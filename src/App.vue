@@ -1,10 +1,11 @@
 <template>
   <div id="app">
-    <transition :name="transitionName">
+    <!-- <transition :name="transitionName"> -->
       <keep-alive>
         <router-view v-if="$route.meta.keepAlive"/>
       </keep-alive>
-    </transition>
+    <!-- </transition> -->
+       <router-view v-if="!$route.meta.keepAlive"/>
   </div>
 </template>
 
@@ -18,9 +19,9 @@ export default {
     };
   },
   watch: {
-    $route(to, from) {
-      this.transitionName = to.meta.index < from.meta.index ? 'slide-right' : 'slide-left'
-    }
+    // $route(to, from) {
+    //   this.transitionName = to.meta.index < from.meta.index ? 'slide-right' : 'slide-left'
+    // }
   }
 
 };

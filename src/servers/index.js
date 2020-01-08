@@ -39,8 +39,15 @@ const postList = (reqData,headers) => {
     return postData(url,reqData,headers)
 }
 
+//获取app用户默认地址
+const postDefaultAddress = (reqData,headers) => {
+    let url = '/user/address/getUserDefaultAddress'
+    return postData(url,reqData,headers)
+}
+
 
 export default {
     postInfo,
     postList,
+    postDefaultAddress,
 }

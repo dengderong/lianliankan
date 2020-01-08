@@ -42,7 +42,7 @@
           </div>
 
           <p class="choiceTxt">选择尺码，下单购买</p>
-          <div class="sizeList" >
+          <div class="sizeList">
             <span
               @click="selectSize(itemSku,indexSku,item,index)"
               :class="{'disabled':itemSku.activitySkuNum == 0,'active':itemSku.isShowt}"
@@ -139,17 +139,17 @@ export default {
         }
       },
       headers: {},
-      carNum:0,
+      carNum: 0
     };
   },
   methods: {
-  async getInfo() {
-    await api.postInfo({ id: this.id }, this.headers).then(res => {
+    getInfo() {
+      api.postInfo({ id: this.id }, this.headers).then(res => {
         this.infoData = res.data.data;
       });
     },
-  async  getList() {
-     await api
+    getList() {
+      api
         .postList(
           { id: this.id, pageSize: 5, pageNum: this.page },
           this.headers
@@ -172,13 +172,13 @@ export default {
         });
     },
     selectSize(itemSku, indexSku, item, index) {
-    
-       //addPrice=0&isShowSellOut=true&id=6D336654744B504730614A396C4F5973724D34596E773D3D&isAddAddress=true&userId=364E755A4764447567364F4D786752547049346D2B673D3D&isOrder=true&sign=dc206eb5d3daa975afc8e5fa5967120e70f3cb10defb5a6dfaf8b7c2a743433b
-       //addPrice 加价价钱 ， isShowSellOut 是否显示缺货商品,  id活动id , isAddAddress 是否允许活动添加地址  , userId app用户id , isOrder 是否运行下单 , sign 签名
+      //addPrice=0&isShowSellOut=true&id=6D336654744B504730614A396C4F5973724D34596E773D3D&isAddAddress=true&userId=364E755A4764447567364F4D786752547049346D2B673D3D&isOrder=true&sign=dc206eb5d3daa975afc8e5fa5967120e70f3cb10defb5a6dfaf8b7c2a743433b
+      //addPrice 加价价钱 ， isShowSellOut 是否显示缺货商品,  id活动id , isAddAddress 是否允许活动添加地址  , userId app用户id , isOrder 是否运行下单 , sign 签名
       //当库存为0是不让显示状态
       item.goodSkuList.forEach(val => {
         if (
-          val.activitySkuNum == 0 || this.$refs[`sizeDom${index}`][indexSku].className == "disabled"
+          val.activitySkuNum == 0 ||
+          this.$refs[`sizeDom${index}`][indexSku].className == "disabled"
         ) {
           itemSku.isShowt = false;
         } else {
@@ -190,7 +190,7 @@ export default {
       }
       item.goodSkuList.sort();
     },
-    async scrollFun() {
+     scrollFun() {
       this.scroll =
         document.documentElement.scrollTop || document.body.scrollTop; //滚动条距离顶部的距离
       this.clienHeight = document.documentElement.clientHeight; //页面可见高度
@@ -235,29 +235,40 @@ export default {
       this.swiperObj.update();
       document.getElementById("swiper").style.display = "block";
     },
-    addCar(item,index) {
-        //每件商品的价格  和 号码 存到是localsitonns
-        let size = this.$refs.item[index].children[1].children[3]
-        let child = size.firstElementChild
-      
-        while(child){
-          if(child.className == 'active'){
-               item.selectSize = child.innerHTML
-               localStorage.setItem(`goods${index}`, JSON.stringify(item))
-               localStorage.setItem('test',[{a:1,b:2}])
-               this.carNum = localStorage.length
-               return;
+    addCar(item, index) {
+      //每件商品的价格  和 号码 存到是localsitonns
+      let size = this.$refs.item[index].children[1].children[3];
+      let child = size.firstElementChild;
+
+      while (child) {
+        if (child.className == "active") {
+          item.selectSize = child.innerHTML;
+          //判断localStorage的dataList空的话创建一个数组存放数据 否则拿到dataList存入数据
+          if (localStorage.getItem("dataList") == null) {
+            let dataList = [];
+            dataList.push(item);
+            localStorage.setItem("dataList", JSON.stringify(dataList));
+          } else {
+            let dataList = JSON.parse(localStorage.getItem("dataList"));
+            dataList.push(item);
+            localStorage.setItem("dataList", JSON.stringify(dataList));
           }
-          child = child.nextElementSibling;
+
+          console.log(JSON.parse(localStorage.getItem("dataList")));
+          console.log(localStorage);
+          this.carNum = JSON.parse(localStorage.getItem("dataList")).length;
+          return;
         }
-        alert('请选择一件商品')
+        child = child.nextElementSibling;
+      }
+      alert("请选择一件商品");
     },
     goToCar() {
-      this.$router.push({ path: "/buycar", query: { isAddAddress: this.isAddAddress, addPrice: this.addPrice, userId: this.userId } });
+      this.$router.push({ path: "/buycar" });
+      localStorage.setItem('path',JSON.stringify({isAddAddress: this.isAddAddress, addPrice: this.addPrice,userId: this.userId}))
     }
   },
   created() {
-    this.carNum = localStorage.length
     this.headers = sign.signHeaderAddSave({
       id: this.id,
       userId: this.userId,
@@ -267,13 +278,21 @@ export default {
       isAddAddress: this.isAddAddress,
       sign: this.sign
     });
+    localStorage.setItem('headers',JSON.stringify(this.headers))
     this.getInfo();
     this.getList();
-    
-   
+    this.carNum =
+      JSON.parse(localStorage.getItem("dataList")) == null
+        ? 0
+        : JSON.parse(localStorage.getItem("dataList")).length;
   },
-  watch:{
-   
+  watch: {
+    $route(to, from) {
+      this.carNum =
+        JSON.parse(localStorage.getItem("dataList")) == null
+          ? 0
+          : JSON.parse(localStorage.getItem("dataList")).length;
+    }
   },
 
   mounted() {
@@ -558,9 +577,9 @@ export default {
 }
 .intheEnd {
   color: #ccc;
-  line-height: 90px;
   font-size: 24px;
   text-align: center;
+  padding-bottom:50px;
 }
 .wrap1 .swiper-container {
   width: 100%;
