@@ -63,7 +63,7 @@ import api from "@/servers/index";
 import '@/assets/css/LArea.min.css'
 import LAreaData from '@/assets/js/city.data.min'
 import LArea from '@/assets/js/LArea.min.js'
-import '@/assets/js/province.js'
+
 
 export default {
   data() {
