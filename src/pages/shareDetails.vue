@@ -287,7 +287,7 @@ export default {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   color: #888;
-}
+} 
 .goodsIntroduction > .content {
   margin: 0 auto;
   display: flex;
